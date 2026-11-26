@@ -67,6 +67,33 @@ class TestComposite(unittest.TestCase):
         bundle.retirer(self.jeu)
         self.assertEqual(bundle.nb_items(), 0)
         self.assertEqual(bundle.prix_total(), 0.00)
+    
+    def test_imbrication_sur_trois_niveaux(self):
+        bundle_1 = Bundle(
+            10, "Bundle 1", "Description",
+            0, 1, "/b1.jpg", rabais=0.10
+        )
+
+        bundle_2 = Bundle(
+            11, "Bundle 2", "Description",
+            0, 1, "/b2.jpg", rabais=0.20
+        )
+
+        bundle_3 = Bundle(
+            12, "Bundle 3", "Description",
+            0, 1, "/b3.jpg", rabais=0.30
+        )
+
+        bundle_1.ajouter(self.jeu)
+        bundle_2.ajouter(bundle_1)
+        bundle_3.ajouter(bundle_2)
+
+        self.assertEqual(bundle_3.nb_items(), 1)
+
+        # 100 - 10 % = 90
+        # 90 - 20 % = 72
+        # 72 - 30 % = 50.40
+        self.assertEqual(bundle_3.prix_total(), 50.40)
 
 
 if __name__ == "__main__":
